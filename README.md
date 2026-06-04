@@ -61,9 +61,9 @@ If you have a manually curated external label override for GSE50244:
 bash run_manuscript_reproducibility.sh --external-meta-override path/to/curated_gse50244_labels.csv
 ```
 
-## Figure-style note
+## Figures note
 
-Manuscript figures are generated without in-figure figure-number titles (for example, no internal "Figure 9" or "Figure 10" headings). Only panel labels/titles (A, B, C, etc.) are retained, so the final figure numbering and full descriptions should appear in the manuscript captions.
+Not all figures produced by this pipeline will be used in the main text, some will be used as supplmentary material, so numbering may change.
 
 ## Main outputs
 
@@ -103,7 +103,7 @@ The earlier discovery plots (volcano, repeated-CV ROC, feature-importance plots,
 
 ## Notes on reproducibility
 
-- The discovery workflow intentionally uses the **curated processed labels** from the manuscript, not raw GEO heuristic relabeling.
+- The discovery workflow intentionally uses the **curated processed labels** from the manuscript, which are included, not raw GEO heuristic relabeling.
 - The external GSE50244 workflow downloads public GEO resources automatically where possible.
 - The full 10-gene panel cannot be tested one-to-one externally in GSE50244 because two non-coding features are not portable across annotation frameworks; the external pipeline therefore reproduces the paper’s **8-gene overlap-restricted reduced-score** analysis.
 
