@@ -1,3 +1,6 @@
+[![DOI](https://zenodo.org/badge/1259762344.svg)](https://doi.org/10.5281/zenodo.20549014)
+
+
 # T2D islet ML panel — reproducible manuscript pipeline
 
 Reproducible repository for the machine-learning and external-validation components of the manuscript on human pancreatic islet transcriptomics in T2D.
