@@ -13,6 +13,9 @@ where labels are:
 - `0` = ND
 - negative values = excluded intermediate classes
 
+They can be obtained by running the pipeline:
+https://github.com/ricardo-romero-ochoa/T2D-islet-integrative
+
 The default workflow reproduces the paper-facing machine-learning analyses from those curated inputs, rather than trying to relabel the discovery cohort from raw GEO metadata.
 
 ## What this repo reproduces
