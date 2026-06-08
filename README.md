@@ -5,7 +5,7 @@
 
 Reproducible repository for the machine-learning and external-validation components of the manuscript on human pancreatic islet transcriptomics in T2D.
 
-This repository is organized around the **curated processed discovery inputs** actually used in the paper:
+This repository is organized around the manually **curated processed discovery inputs** actually used in the paper:
 
 - `data/processed/GSE164416_expr_normalized.csv`
 - `data/processed/GSE164416_labels.csv`
@@ -16,8 +16,7 @@ where labels are:
 - `0` = ND
 - negative values = excluded intermediate classes
 
-They can be obtained by running the pipeline:
-https://github.com/ricardo-romero-ochoa/T2D-islet-integrative
+They are provided in the file processed.zip
 
 The default workflow reproduces the paper-facing machine-learning analyses from those curated inputs, rather than trying to relabel the discovery cohort from raw GEO metadata.
 
