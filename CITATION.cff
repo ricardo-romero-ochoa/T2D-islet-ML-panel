@@ -1,0 +1,40 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it using the metadata below."
+title: "T2D-islet-ML-panel"
+type: software
+authors:
+  - family-names: "Romero"
+    given-names: "Ricardo"
+    orcid: "https://orcid.org/0000-0002-4589-2984"
+repository-code: "https://github.com/ricardo-romero-ochoa/T2D-islet-ML-panel"
+url: "https://github.com/ricardo-romero-ochoa/T2D-islet-ML-panel"
+doi: "10.5281/zenodo.20549014"
+version: "v1.0.1"
+date-released: "2026-06-04"
+license: "GPL-3.0-only"
+abstract: "Reproducible repository for the machine-learning and external-validation components of the manuscript on human pancreatic islet transcriptomics in type 2 diabetes."
+keywords:
+  - "type 2 diabetes"
+  - "pancreatic islets"
+  - "machine learning"
+  - "transcriptomics"
+  - "external validation"
+  - "candidate gene panel"
+identifiers:
+  - type: doi
+    value: "10.5281/zenodo.20549014"
+    description: "Zenodo concept DOI"
+  - type: doi
+    value: "10.5281/zenodo.20549015"
+    description: "Zenodo version DOI for v1.0.1"
+preferred-citation:
+  type: software
+  title: "T2D-islet-ML-panel"
+  authors:
+    - family-names: "Romero"
+      given-names: "Ricardo"
+      orcid: "https://orcid.org/0000-0002-4589-2984"
+  doi: "10.5281/zenodo.20549014"
+  repository-code: "https://github.com/ricardo-romero-ochoa/T2D-islet-ML-panel"
+  version: "v1.0.1"
+  date-released: "2026-06-04"
