@@ -1,0 +1,12 @@
+{
+  "dataset": "GSE50244",
+  "score": "8-gene annotation-compatible consensus-pool score",
+  "auc": 0.907,
+  "ci_method": "DeLong",
+  "ci_95_lower": 0.818,
+  "ci_95_upper": 0.996,
+  "n_ND": 51,
+  "n_T2D": 11,
+  "genes": ["DKK3", "PRIMA1", "TAFA4", "HHATL", "PARVG", "GABRA2", "SLC2A2", "ARG2"],
+  "note": "The eight-gene score is drawn from the broader consensus feature pool; it is not a literal subset of the final ranked 10-feature panel."
+}
