@@ -1,125 +1,107 @@
 [![DOI](https://zenodo.org/badge/1259762344.svg)](https://doi.org/10.5281/zenodo.20549014)
 
-
 # T2D islet ML panel — reproducible manuscript pipeline
 
-Reproducible repository for the machine-learning and external-validation components of the manuscript on human pancreatic islet transcriptomics in T2D.
+Reproducible repository for the machine-learning and GSE50244 external-validation components of the manuscript **Human Islet Transcriptomics in Type 2 Diabetes Reveals Conserved Dysfunction Axes and a Candidate Gene Panel**.
 
-This repository is organized around the manually **curated processed discovery inputs** actually used in the paper:
+## Primary validation in the current manuscript
 
-- `data/processed/GSE164416_expr_normalized.csv`
-- `data/processed/GSE164416_labels.csv`
+The primary internal estimate is **fully nested stratified 5-fold cross-validation**. Within every outer training fold the workflow repeats:
 
-where labels are:
+1. DEG calling;
+2. LASSO, SVM-RFE and Random Forest feature selection;
+3. consensus-panel construction;
+4. scaling; and
+5. soft-voting ensemble fitting.
 
-- `1` = T2D
-- `0` = ND
-- negative values = excluded intermediate classes
+The held-out outer fold is used only for prediction. This design prevents feature-selection leakage from the full discovery cohort.
 
-They are provided in the file processed.zip
+Current primary internal performance:
 
-The default workflow reproduces the paper-facing machine-learning analyses from those curated inputs, rather than trying to relabel the discovery cohort from raw GEO metadata.
+- pooled out-of-fold AUC: **0.960**;
+- stratified-bootstrap 95% CI: **0.900–0.997**;
+- sensitivity: **0.923**;
+- specificity: **0.833**;
+- MCC: **0.756**.
 
-## What this repo reproduces
+The older fixed-panel LOOCV result (AUC = 1.000) is retained only as a descriptive sensitivity analysis and is not the primary performance estimate.
 
-Discovery ML workflow:
-- DEG analysis on the curated ND/T2D discovery subset
-- three-method feature selection: **LASSO + SVM-RFE + Random Forest**
-- final 10-gene panel export
-- repeated 5-fold CV model training
-- **LOOCV** primary validation
-- leakage-verification sensitivity analysis
-- manuscript-facing **Figures 7–9**
+## Feature-selection stability
 
-External validation workflow:
-- independent testing in **GSE50244**
-- overlap-restricted reduced score
-- frozen discovery-threshold analysis
-- distribution-shift analysis
-- recalibration sensitivity analyses
-- manuscript-facing **Figure 10**
+Across the five outer folds, the most stable final-panel features were:
 
-## Quick start
+- GABRA2: 5/5 folds;
+- ENSG00000284653: 5/5;
+- SLC2A2: 4/5;
+- HHATL, ARG2, PRIMA1 and ENSG00000227589: 3/5 each;
+- DKK3 and RNU1-70P: 2/5;
+- TAFA4: 1/5.
 
-1. Install requirements
+Fold-specific panels and complete stability results are in `results/nested_validation/`.
 
-```bash
-pip install -r requirements.txt
-```
+## External validation
 
-2. Put the curated discovery files here
+The independent GSE50244 validation uses an **8-gene annotation-compatible score drawn from the broader consensus feature pool**, not a literal subset of the final ranked 10-feature panel. The portable genes are:
+
+`DKK3, PRIMA1, TAFA4, HHATL, PARVG, GABRA2, SLC2A2, ARG2`.
+
+External discrimination is AUC **0.907** with DeLong 95% CI **0.818–0.996** (51 ND, 11 T2D). Rank discrimination transports well, whereas the frozen discovery threshold does not because of score-location shift; target-cohort recalibration is therefore required for thresholded use.
+
+## Curated discovery inputs
+
+The manuscript-facing workflow uses the curated processed GSE164416 files:
 
 ```text
 data/processed/GSE164416_expr_normalized.csv
 data/processed/GSE164416_labels.csv
 ```
 
-3. Run the complete manuscript-facing pipeline
+Labels are `1 = T2D`, `0 = ND`; negative values represent excluded intermediate classes.
+
+## Run the manuscript-facing workflow
 
 ```bash
+pip install -r requirements.txt
 bash run_manuscript_reproducibility.sh
 ```
 
-If you have a manually curated external label override for GSE50244:
+The runner executes the full-cohort descriptive analysis, the fully nested primary validation, fixed-panel sensitivity analyses, and GSE50244 external validation.
 
-```bash
-bash run_manuscript_reproducibility.sh --external-meta-override path/to/curated_gse50244_labels.csv
+## Key outputs
+
+```text
+results/final_gene_panel.csv
+results/nested_validation/nested_5fold_metrics.csv
+results/nested_validation/nested_5fold_fold_metrics.csv
+results/nested_validation/nested_5fold_predictions_and_panels.csv
+results/nested_validation/nested_feature_selection_stability.csv
+results/nested_validation/nested_auc_bootstrap_distribution.csv
+results/external_validation/gse50244_fixed_threshold/
 ```
 
-## Figures note
+## Manuscript figure mapping
 
-Not all figures produced by this pipeline will be used in the main text, some will be used as supplmentary material, so numbering may change.
+See `MANUSCRIPT_FIGURE_MAP.md`. In the current manuscript:
 
-## Main outputs
+- **Figure 7**: fully nested ML validation and feature stability;
+- **Figure 8**: GSE50244 external transportability/calibration shift;
+- **Supplementary Figure S1**: candidate-panel biological/network context;
+- **Supplementary Figure S2**: convergence between module and ML frameworks.
 
-### Core results
-- `results/deg_results.csv`
-- `results/deg_list.csv`
-- `results/final_gene_panel.csv`
-- `results/model_cv_performance.csv`
-- `results/loocv_performance.csv`
-- `results/loocv_per_sample.csv`
+The single-cell Figure 10 is maintained in the companion `scAnalysis-T2D-Islets` repository.
 
-### Figure inputs
-- `results/figure_inputs/fig7_*`
-- `results/figure_inputs/fig8_*`
-- `results/figure_inputs/fig9_*`
-
-### External validation outputs
-- `results/external_validation/gse50244_initial/`
-- `results/external_validation/gse50244_fixed_threshold/`
-- `results/external_validation/gse50244_distribution_shift/`
-- `results/external_validation/gse50244_recalibration/`
-
-### Final paper-facing figures
-- `figures/figure7_ml_pipeline.png`
-- `figures/figure8_panel_network.png`
-- `figures/figure9_convergence.png`
-- `figures/figure10_external_transportability.png`
-
-## Figure map
-
-- **Figure 7**: `06_visualization/build_figures_7_9.py`
-- **Figure 8**: `06_visualization/build_figures_7_9.py`
-- **Figure 9**: `06_visualization/build_figures_7_9.py`
-- **Figure 10**: `08_external_validation/build_figure10.py`
-
-The earlier discovery plots (volcano, repeated-CV ROC, feature-importance plots, etc.) are also generated and can be used as supplementary or diagnostic figures.
-
-## Notes on reproducibility
-
-- The discovery workflow intentionally uses the **curated processed labels** from the manuscript, which are included, not raw GEO heuristic relabeling.
-- The external GSE50244 workflow downloads public GEO resources automatically where possible.
-- The full 10-gene panel cannot be tested one-to-one externally in GSE50244 because two non-coding features are not portable across annotation frameworks; the external pipeline therefore reproduces the paper’s **8-gene overlap-restricted reduced-score** analysis.
-
-## Optional checks
-
-After the run, compare key results to the manuscript-facing targets:
+## Reproducibility check
 
 ```bash
 python 09_reproducibility/check_expected_results.py
 ```
 
-## Legacy raw-data path
+The check uses the nested AUC (0.960) as the primary internal target and the GSE50244 AUC (0.907) as the external target.
 
-The original raw GEO download / labeling scripts remain in `01_data/` and `02_preprocessing/`, but they are **not** the default route for reproducing the manuscript’s final machine-learning results.
+## Legacy analyses
+
+Repeated CV, fixed-panel LOOCV, and the earlier leakage-verification scripts remain available for sensitivity and historical reproducibility. They should not be interpreted as the primary estimate of model generalization.
+
+## Citation
+
+Use the Zenodo concept DOI: **10.5281/zenodo.20549014**. `CITATION.cff` reflects the current GitHub revision; a new version-specific Zenodo DOI can be added after archiving this release.
